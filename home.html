@@ -1,0 +1,59 @@
+<div class="container-fluid">
+    <div class="row xcontent">
+        <div class="col-md-2" >
+            <div ng-controller="FunTreeListCtrl">
+                <script type="text/ng-template" id="group-template.html">
+                    <div class="panel {{panelClass || 'panel-default'}}">
+                        <div class="panel-heading">
+                            <h4 class="panel-title" style="color:#fa39c3">
+                                <a href="#!" tabindex="0"
+                                   class="accordion-toggle"
+                                   ng-click="toggleOpen()"
+                                   uib-accordion-transclude="heading">
+                                    <span ng-class="{'text-muted': isDisabled}">
+                                        {{heading}}</span>
+                                </a>
+                            </h4>
+                        </div>
+                        <div class="panel-collapse collapse" uib-collapse="!isOpen">
+                            <div class="panel-body"
+                                 style="text-align: right"
+                                 ng-transclude></div>
+                        </div>
+                    </div>
+                </script>
+                <uib-accordion close-others="oneAtATime">
+                    <uib-accordion-group heading="{{group.title}}" ng-repeat="group in groups">
+                      <p ng-bind-html="group.content | trustHtml"></p>
+                    </uib-accordion-group>
+                    <uib-accordion-group heading="MySQL">
+                      <div ng-include="'connTree.html'"></div>
+                    </uib-accordion-group>
+                    <uib-accordion-group heading="连接信息">
+                        <p>添加新的数据库连接.</p>
+                        <button type="button" class="btn btn-default btn-sm"
+                                ng-click="addItem()">添加...</button>
+                        <div ng-repeat="item in items">{{item}}</div>
+                    </uib-accordion-group>
+                </uib-accordion>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div ng-controller="TabsDemoCtrl">
+                <uib-tabset >
+                    <uib-tab ng-repeat="tab in tabs"
+                             heading="{{tab.label}}"
+                             active="tab.active"
+                             select="switchMe($event.target)">
+                        {{tab.link}} </uib-tab>
+                </uib-tabset>
+            </div>
+        </div>
+    </div>
+    <div class="row xfoot">
+        <div ng-controller="FunTreeListCtrl">
+            <script type="text/ng-template">
+            </script>
+        </div>
+    </div>
+</div>

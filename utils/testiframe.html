@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+ <html>
+ <head>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script> 
+    <script type="text/javascript">
+         $(function(){
+            var timings = {};
+            $.each([
+            'http://bbc.co.uk', 
+            'http://ikea.com',
+            'http://www.nasa.gov',
+            'http://google.com'], function(index, url){
+                var iFrame = $( '<iframe></iframe>' )
+                .attr( 'src', url)
+                .css('display', 'none')
+                .appendTo( $( 'body' ) );
+                var item = {
+                    'frame': iFrame[0],
+                    'timing': iFrame[0].contentWindow.performance.timing,
+                    'status': 0,
+                    'logged': 0
+                }
+                timings[url] = item;
+                iFrame.load(function(){
+                    item.status = 1;
+                    $('#log').trigger('check');
+                });
+             });
+
+             $('#log').bind('check', function(){
+                $.each(timings, function(url, item){
+                    console.log(item);
+                    if (item.status == 0 || item.logged) return;
+                    item.logged = 1;
+                    var timing = item.timing;
+                    var navStart = timing.navigationStart;
+                    var redStart = timing.redirectStart - navStart;
+                    var redEnd = timing.redirectEnd - navStart;
+                    var dnsStart = timing.domainLookupStart - navStart;
+                    var dnsEnd = timing.domainLookupEnd - navStart;
+                    var tcpStart = timing.connectStart - navStart;
+                    var tcpEnd = timing.connectEnd - navStart;
+                    var reqStart = timing.requestStart - navStart;
+                    var loadStart = timing.responseStart - navStart;
+                    var loadEnd = timing.loadEventStart - navStart;
+                    $('#log').append($(
+                        '<li><b>URL: ' + url + '</b><br />' +
+                        'DNS LOOKUP = ' + dnsStart + '-' + dnsEnd + 'ms<br />' +
+                        'EST TCP CON = ' + tcpStart + '-' + tcpEnd + 'ms<br />' +
+                        'LOADING RESPONSE = ' + reqStart + '-' + loadStart + 'ms</li>'
+                    ));
+                });
+             });
+
+         });
+     </script>
+ </head>
+ <body>
+ <ul id="log"></ul>
+ </body>
+ </html>
